@@ -1,0 +1,25 @@
+- # check python3 version
+# python3 --version
+
+- # Create a virtual environment:
+# python3 -m venv venv
+# source venv/bin/activate ---on mac,
+# venv\Scripts\activate -----on win,
+
+- # Install the latest version of Django using pip:
+# pip install django
+
+- # Check the installed Django version:
+# python3 -m django --version
+
+- # To create a new Django project, run:
+# django-admin startproject myproject
+
+- # If django-admin is not found, ensure the virtual environment is activated and that pip installed Django correctly:
+# pip install --upgrade pip
+# pip install django
+
+# python3 manage.py createsuperuser
+
+# additiontal
+# pip install django-cors-headers, pip install django-allauth

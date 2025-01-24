@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "rest_framework_simplejwt",
-    "authentication.apps.AuthenticationConfig",
+    # "authentication.apps.AuthenticationConfig",
     "dj_rest_auth",
     "dj_rest_auth.registration",
 ]
@@ -86,8 +86,8 @@ SOCIALACCOUNT_PROVIDERS = {
     },
     "github": {
         "APP": {
-            "client_id": "Ov23liHL8vGu6i8u6PRR",
-            "secret": "5fba39906ec746e1541b6ec452065386c733c227",
+            "client_id": os.getenv("GITHUB_CLIENT_ID"),
+            "secret": os.getenv("GITHUB_CLIENT_SECRET"),
             "key": "",
         }
     },
@@ -115,7 +115,7 @@ AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
     "django.contrib.auth.backends.ModelBackend",
     # `allauth` specific authentication methods, such as login by email
-    # 'allauth.account.auth_backends.AuthenticationBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
     # 'social_core.backends.google.GoogleOAuth2',
     # 'social_core.backends.github.GithubOAuth2',
 ]
@@ -210,3 +210,14 @@ else:
         "http://localhost:3000/",
         "http://127.0.0.1:3000/",
     ]
+
+#This is required otherwise it asks for email server
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# ACCOUNT_EMAIL_REQUIRED = True
+# AUTHENTICATION_METHOD = 'EMAIL'
+# ACCOUNT_EMAIL_VERIFICATION = 'optional'
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True   
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_VERIFICATION = "none"

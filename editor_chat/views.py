@@ -228,7 +228,7 @@ def create_chat_stream(request):
 def get_first_chats(request): 
     if request.method == 'GET':
         data = request.GET
-        chats = AIChat.objects.all().order_by('session_id', 'created_at')
+        chats = AIChat.objects.filter(user_id=data.get('user_id')).order_by('session_id', 'created_at')
 
         # Group by session_id and get the first chat in each session
         grouped_chats = {}

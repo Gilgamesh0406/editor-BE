@@ -19,7 +19,20 @@
 # pip install --upgrade pip
 # pip install django
 
+- # create a admin
 # python3 manage.py createsuperuser
 
 # additiontal
-# pip install django-cors-headers, pip install django-allauth
+# pip install django-cors-headers, 
+# pip install django-allauth, 
+# pip install djangorestframework,
+# pip install djangorestframework-simplejwt
+# pip install requests
+# pip install cryptography
+# pip install openai
+# pip install python-dotenv
+
+# pip install pipenv
+# pipenv install
+
+

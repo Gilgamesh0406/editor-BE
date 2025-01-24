@@ -71,9 +71,7 @@ def get_messages(option, prompt, command=None):
             {
                 "role": "system",
                 "content": (
-                    "You are an AI writing assistant that fixes grammar and spelling errors in existing text. "
-                    "Limit your response to no more than 200 characters, but make sure to construct complete sentences. "
-                    "Use Markdown formatting when appropriate."
+                    "You will be provided with statements, and your task is to convert them to standard English."
                 ),
             },
             {
@@ -120,7 +118,7 @@ def get_messages(option, prompt, command=None):
             },
             {
                 "role": "user",
-                "content": f"For this text: {prompt}. Please provide only the labels and datasets with the JSON object format received from OpenAI, converted into a format compatible with Notion. The output must include two arrays: one for the labels and one for the datasets. Format the response as a valid JavaScript object for use with Chart.js, and do not include instructions for chart or language. and You have to respect the command: {command},",
+                "content": f"For this text: {prompt}. Please provide only the labels and datasets with the JSON object format received from OpenAI, converted into a format compatible with Notion. The output must include two arrays: one for the labels and one for the datasets. Format the response as a valid only JavaScript object for using with Chart.js, and do not include instructions for chart or language. and You have to respect the command: {command},",
             },            
         ],
     }
@@ -201,7 +199,7 @@ def create_chat_stream(request):
                 messages=messages,
                 stream=True,
                 temperature=0.5,
-                max_tokens=256,
+                max_tokens=1000,
                 top_p=1,
                 frequency_penalty=0,
                 presence_penalty=0
@@ -230,7 +228,7 @@ def create_chat_stream(request):
 def get_first_chats(request): 
     if request.method == 'GET':
         data = request.GET
-        chats = AIChat.objects.all().order_by('session_id', 'created_at')
+        chats = AIChat.objects.filter(user_id=data.get('user_id')).order_by('session_id', 'created_at')
 
         # Group by session_id and get the first chat in each session
         grouped_chats = {}
@@ -248,7 +246,7 @@ def get_first_chats(request):
             first_chats = first_chats
 
         # Paginate the results (e.g., 10 items per page)
-        page_size = 10
+        page_size = 28
         paginated_chats = first_chats[:page_size]
 
         # Prepare the response data

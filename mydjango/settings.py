@@ -78,18 +78,17 @@ SOCIALACCOUNT_PROVIDERS = {
         "APP": {
             "client_id": os.getenv("GOOGLE_CLIENT_ID"),
             "secret": os.getenv("GOOGLE_CLIENT_SECRET"),
-            "key": "",
         },
         "SCOPE": ["profile", "email"],
-        "AUTH_PARAMS": {"access_type": "online"},
-        "VERIFIED_EMAIL": True,
+        "AUTH_PARAMS": {"access_type": "offline"},
     },
     "github": {
         "APP": {
             "client_id": os.getenv("GITHUB_CLIENT_ID"),
             "secret": os.getenv("GITHUB_CLIENT_SECRET"),
-            "key": "",
-        }
+        },
+        "SCOPE": ["user:email"],
+        "AUTH_PARAMS": {"access_type": "offline"},
     },
 }
 
@@ -198,8 +197,8 @@ SOCIAL_AUTH_GITHUB_SECRET = "<github-client-secret>"
 
 SITE_ID = 1
 
-ACCOUNT_EMAIL_REQUIRED = False
-ACCOUNT_EMAIL_VERIFICATION = "none"
+# ACCOUNT_EMAIL_REQUIRED = False
+# ACCOUNT_EMAIL_VERIFICATION = "none"
 
 REST_AUTH = {"USE_JWT": True, "JWT_AUTH_HTTPONLY": False}
 
@@ -221,3 +220,5 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True   
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_REQUIRED = True

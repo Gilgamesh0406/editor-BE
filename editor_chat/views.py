@@ -134,23 +134,27 @@ def save_chat(request):
             prompt = data['prompt']
             collected_messages = data['collectedMsg']
             session_id = data['session_id']
+            user_id = data['user_id']
             res = AIChat.objects.create(
                 content=collected_messages,
                 model="gpt-4o",  # or dynamically set this value
                 type=option,  # Ensure `option` is correctly set elsewhere in your code
                 user_question=prompt,  # This should be the user's input
-                session_id=session_id  # The session identifier
+                session_id=session_id,  # The session identifier
+                user_id = user_id
             )
             res.save()
             user = {
                 'created_at': res.created_at.strftime('%Y-%m-%dT%H:%M:%S.%fZ') if isinstance(res.created_at, datetime) else res.created_at,
                 'session_id': res.session_id,
                 'content': res.content,
+                'user_id': res.user_id,
                 'user_question': res.user_question
             }
 
             chatHis = {
                 'id': res.id,
+                'user_id': res.user_id,
                 'content': res.content,
                 'created_at': res.created_at.strftime('%Y-%m-%dT%H:%M:%S.%fZ') if isinstance(res.created_at, datetime) else res.created_at,
                 'model': res.model,
@@ -195,7 +199,7 @@ def create_chat_stream(request):
 
             # Call OpenAI API with streaming enabled
             response = client.chat.completions.create(
-                model="gpt-4o",
+                model="gpt-4o-mini",
                 messages=messages,
                 stream=True,
                 temperature=0.5,
@@ -274,10 +278,11 @@ def get_first_chats(request):
 def get_chats_by_session_id(request):
     if request.method == "GET":
         session_id = request.GET['session_id']
-        if not session_id:
+        user_id = request.GET['user_id']
+        if not session_id or not user_id:
             return JsonResponse({'error': 'session_id is required'}, status=400)
         try:
-            chats = AIChat.objects.filter(session_id=session_id).values()
+            chats = AIChat.objects.filter(session_id=session_id, user_id=user_id).values()
             return JsonResponse({'chats': list(chats)}, status=200)
         except AIChat.DoesNotExist:
             return JsonResponse({'error': 'No chats found for this session ID'}, status=404)

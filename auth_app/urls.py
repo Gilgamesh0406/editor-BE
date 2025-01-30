@@ -5,13 +5,8 @@ from dj_rest_auth.registration.views import RegisterView
 from rest_framework_simplejwt.views import TokenVerifyView
 from auth_app.views import GoogleLogin, GithubLogin
 from auth_app.views import check_email
-from allauth.account.views import ConfirmEmailView
 
 urlpatterns = [
-    # path('register/', RegisterView.as_view(), name='register'),
-    # path('api/login/', LoginView.as_view(), name='login'),
-    # path('api/google-login/', GoogleLoginView.as_view(), name='google_login'),
-    # path('api/github-login/', GithubLoginView.as_view(), name='github_login'),
     path("registration/", RegisterView.as_view(), name="rest_register"),
     path('registration/verify-email/', RegisterView.as_view(), name='account_confirm_email'),
     path("login/", LoginView.as_view(), name="rest_login"),

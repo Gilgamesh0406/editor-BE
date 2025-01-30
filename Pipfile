@@ -18,4 +18,4 @@ dj-rest-auth = {extras = ["with_social"], version = "*"}
 [dev-packages]
 
 [requires]
-python_version = "3.12"
+python_version = "3.13.1"

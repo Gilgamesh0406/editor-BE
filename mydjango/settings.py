@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "corsheaders",
-    # 'auth_app',
+    'auth_app',
     "editor_chat",
     "allauth",
     "allauth.account",

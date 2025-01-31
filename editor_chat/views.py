@@ -169,6 +169,38 @@ def create_chat_stream(request):
     # Handle invalid request method
     return JsonResponse({'error': 'Method not allowed'}, status=400)
 
+
+# To generate a meaningful chat history title from the first message of a conversation using OpenAI,
+
+def get_meaningful_chat_history(content):
+    try:
+        prompt = f"""
+        You are an AI that generates concise chat history titles. Given the first message of a chat, create a short and meaningful title (3-7 words). Examples:
+
+        1. Input: Hey, can you help me with my React project? 
+           Output: React Project Assistance
+        2. Input: What's the best way to structure a database for a marketplace?  
+           Output: Marketplace Database Design
+        3. Input: I need advice on choosing between Flutter and React Native for my app.  
+           Output: Flutter vs. React Native Choice
+
+        Now, generate a title for: "{content}"
+        """
+
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[{"role": "system", "content": prompt}],
+            temperature=0.5,
+            max_tokens=20,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return "Untitled Chat"
+
 # get chats by scroll pagination
 
 def get_first_chats(request): 
@@ -180,7 +212,13 @@ def get_first_chats(request):
         grouped_chats = {}
         for chat in chats:
             if chat.session_id not in grouped_chats:
-                grouped_chats[chat.session_id] = chat
+                 grouped_chats[chat.session_id] = {
+                    'session_id': chat.session_id,
+                    'created_at': chat.created_at.isoformat(),
+                    'content': chat.content,  # Keep original content
+                    'title': get_meaningful_chat_history(chat.content),  # Generate title
+                    'user_question': chat.user_question
+                }
         first_chats = list(grouped_chats.values())
         # Handle cursor-based pagination
         cursor = data.get('cursor')  # Use get to avoid KeyError
@@ -197,7 +235,7 @@ def get_first_chats(request):
 
         # Prepare the response data
         response_data = {
-            'chats': [{'session_id': chat.session_id, 'created_at': chat.created_at, 'content': chat.content, 'user_question': chat.user_question} for chat in paginated_chats],
+            'chats': paginated_chats,
             'has_next': len(first_chats) > page_size,
             'has_previous': cursor is not None,
         }

@@ -68,7 +68,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
 ]
-ACCOUNT_AUTHENTICATION_METHOD = "username"
+# ACCOUNT_AUTHENTICATION_METHOD = "username"
 
 SOCIALACCOUNT_PROVIDERS = {
     "google": {

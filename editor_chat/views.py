@@ -10,6 +10,8 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+# ai prompt key for ai chat
+
 def get_messages(option, prompt, command=None):
     messages_map = {
         "improve": [
@@ -67,6 +69,8 @@ def get_messages(option, prompt, command=None):
 
     return messages_map.get(option, [])
 
+# save ai chat stream
+
 def save_chat(request):
     if request.method == 'POST':
         try:
@@ -91,7 +95,8 @@ def save_chat(request):
                 'session_id': res.session_id,
                 'content': res.content,
                 'user_id': res.user_id,
-                'user_question': res.user_question
+                'title': get_meaningful_chat_history(res.user_question),
+                'user_question':res.user_question
             }
 
             chatHis = {
@@ -108,7 +113,6 @@ def save_chat(request):
             }
 
             if user and chatHis is not None:
-                print("success")
                 return JsonResponse(
                     {'message: ': 'created successfully!',
                      'user': user,
@@ -126,6 +130,8 @@ def save_chat(request):
             print(f"Error occurred: {e}")  # Log the error for debugging
             return JsonResponse({'error': 'An internal error occurred. Please try again later.'}, status=500)
     return JsonResponse({'error': 'Method not allowed'}, status=400)        
+
+# get chat stream
 
 def create_chat_stream(request):
     if request.method == 'POST':
@@ -168,7 +174,6 @@ def create_chat_stream(request):
 
     # Handle invalid request method
     return JsonResponse({'error': 'Method not allowed'}, status=400)
-
 
 # To generate a meaningful chat history title from the first message of a conversation using OpenAI,
 
@@ -254,6 +259,8 @@ def get_first_chats(request):
             response_data['previous_cursor'] = None
 
         return JsonResponse(response_data)
+
+# get chats history
 
 def get_chats_by_session_id(request):
     if request.method == "GET":

@@ -24,7 +24,7 @@ def get_messages(option, prompt, command=None):
             },
             {
                 "role": "user",
-                "content": f"The existing text is: {prompt}. You have to respect the command: {command}",
+                "content": f"The existing text is: {prompt}. You have to respect the command: {command} and generate text in a more professional tone what to improve",
             },
         ],
         "fix": [
@@ -36,7 +36,7 @@ def get_messages(option, prompt, command=None):
             },
             {
                 "role": "user",
-                "content": f"The existing text is: {prompt}. You have to respect the command: {command}",
+                "content": f"The existing text is: {prompt}. You have to respect the command: {command} ",
             },
         ],
         "zap": [
@@ -44,12 +44,13 @@ def get_messages(option, prompt, command=None):
                 "role": "system",
                 "content": (
                     "You are an AI writing assistant that generates text based on a prompt. "
+                    "make sure to construct complete sentences. "
                     "You take an input from the user and a command for manipulating the text. "
                 ),
             },
             {
                 "role": "user",
-                "content": f"For this text: {prompt}. You have to respect the command: {command}",
+                "content": f"make it Professional, structured, and respectful. fact-based, and educational. For this text: {prompt}. You have to respect the command: {command}",
             },
         ],
         "chart": [

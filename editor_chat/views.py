@@ -70,6 +70,23 @@ def get_messages(option, prompt, command=None):
 
     return messages_map.get(option, [])
 
+# delete session
+
+def delete_session(request):
+    if request.method == 'DELETE':   
+        session_id = request.GET.get('session_id')
+        if not session_id:
+            return JsonResponse({'error': 'Missing session_id!'})
+        try:
+            if not AIChat.objects.filter(session_id=session_id).exists():
+                return JsonResponse({'error': f'Session ID {session_id} does not exist!'}, status=404)
+            AIChat.objects.filter(session_id=session_id).delete()
+            return JsonResponse({'success': f'Session ID {session_id} deleted successfully!'})
+        except Exception as e:
+            print(f"Error occurred: {e}")
+            return JsonResponse({"error": 'An Internal error occurred. Please try again later'}, status=500)
+    return  JsonResponse({'error': 'Method not allowed'}, status=400)
+
 # save ai chat stream
 
 def save_chat(request):
@@ -276,4 +293,25 @@ def get_chats_by_session_id(request):
             return JsonResponse({'error': 'No chats found for this session ID'}, status=404)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
+    return JsonResponse({'error': 'Method not allowed'}, status=400)
+
+# rewrite_text
+
+def rewrite_text(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+            # Extract data from request
+        text = data['text']
+        level = data['level']
+
+        if not text or not level:
+            return JsonResponse({"error": "Text and level are required"}, status=400)
+        prompt = f"You are an AI that rewrites text according to different reading levels. Rewrite the following text at a a {level} reading level:\n\n{text}."
+        response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.7,
+        )
+        new_text = response.choices[0].message.content
+        return JsonResponse({"rewritten_text": new_text})
     return JsonResponse({'error': 'Method not allowed'}, status=400)

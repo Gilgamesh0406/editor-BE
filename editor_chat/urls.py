@@ -7,4 +7,6 @@ urlpatterns = [
     path("get_first_chats/", views.get_first_chats, name="get_first_chats"),
     path("get_chats_by_session_id/", views.get_chats_by_session_id, name="get_chats_by_session_id"),
     path("save_chat", views.save_chat, name="save_chat"),
+    path("delete_session/", views.delete_session, name="delete_session"),
+    path("rewrite_text", views.rewrite_text, name="rewrite_text")
 ]
